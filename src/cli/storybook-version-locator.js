@@ -4,7 +4,7 @@ const isEmpty = require('lodash/isEmpty');
 const unionBy = require('lodash/unionBy');
 const logger = require('./cli-logger');
 const userMessages = require('../user-messages');
-const { getPackageJsonFromPath } = require('./package-json-utils');
+const { getPackageJsonFromName } = require('./package-json-utils');
 
 function getStorybookVersionsInfo(appPackageJson, nodeModulesPath) {
   const storybookDependencies = getStorybookDependencies(appPackageJson.devDependencies).concat(
@@ -37,10 +37,9 @@ function getStorybookDependencies(dependenciesObject) {
 
 function getStorybookInstalledPackages(storybookPackages, nodeModulesPath) {
   return storybookPackages.reduce((packages, { name }) => {
-    const installedPackagePath = path.join(nodeModulesPath, name);
 
     try {
-      const packageJson = getPackageJsonFromPath(installedPackagePath);
+      const packageJson = getPackageJsonFromName(name);
       packages.push({ name: packageJson.name, version: packageJson.version });
     } catch (e) {
       logger.warning(userMessages.packageMissingInNodeModules(name));

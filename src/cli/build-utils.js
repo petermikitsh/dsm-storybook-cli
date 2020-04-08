@@ -7,6 +7,7 @@ const userMessages = require('../user-messages');
 const { environmentKeys } = require('../services/configuration');
 const { STORYBOOK_ENV_VARIABLE } = require('../addons/constants');
 const { STORYBOOK_BUILD_FOLDER } = require('./constants');
+const resolveBin = require('resolve-bin');
 
 const STORY_METADATA_FILENAME = 'story-metadata.json';
 
@@ -57,7 +58,7 @@ function buildCommand(runConfiguration, nodeModulesPath, script, ...options) {
   const cmdScriptPath = path.resolve(nodeModulesPath, '.bin', `${script}.cmd`);
   // .cmd files are only on windows machines, they are for running node on windows as it's different from Mac
   const runScript = fs.pathExistsSync(cmdScriptPath) ? cmdScriptPath : `node ${scriptPath}`;
-  const crossEnvScriptPath = path.resolve(nodeModulesPath, '.bin', 'cross-env');
+  const crossEnvScriptPath = resolveBin.sync('cross-env');
 
   return `${crossEnvScriptPath} ${setEnvironmentVariable(runConfiguration)} ${runScript} ${options.join(' ')}`;
 }

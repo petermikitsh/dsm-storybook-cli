@@ -1,3 +1,4 @@
+const path = require('path');
 const readPkgUp = require('read-pkg-up');
 const readPkg = require('read-pkg');
 const logger = require('./cli-logger');
@@ -34,6 +35,14 @@ function getPackageJsonFromPath(pkgPath) {
 }
 
 /**
+ * Get the package.json from the name provided
+ */
+function getPackageJsonFromName(name) {
+  const pkgPath = path.dirname(path.join(name, 'package.json'));
+  return readPkg.sync({ cwd: pkgPath });
+}
+
+/**
  * Get the package.json of a dependency from node_modules if it exists, or undefined if not
  */
 function getDependencyPackageJson(installedPackageName) {
@@ -41,4 +50,4 @@ function getDependencyPackageJson(installedPackageName) {
   return installedPath ? readPkg.sync({ cwd: installedPath.packageResolvedPath }) : null;
 }
 
-module.exports = { getClientPackageJson, getPackageJsonFromPath, getDependencyPackageJson };
+module.exports = { getClientPackageJson, getPackageJsonFromPath, getPackageJsonFromName, getDependencyPackageJson };
